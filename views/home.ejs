@@ -4,8 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        h1 {
+            text-align: center;
+            color: #333;
+            font-family: Arial, sans-serif;
+            font-size: 4rem;
+        }
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20vh;
+            font-size: larger;
+        }
+        .shortID {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #555;
+            margin-top: 20px;
+        }
+        .table-container {
+            width: 100%;
+            margin: 0 auto;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .table-container th{
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+            
+        }
+        .table-container td{
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello From Server</h1>
+    <h1>Url Shortner</h1>
+    <%if(locals.id){%>
+        <div class="shortID">Your Short URL is: http://localhost:8000/api/url/<%=locals.id %></div> <%}%>
+    <div class="form-container">
+        <form method="POST" action="/api/url">
+            <label for="">Enter Your Original URL</label>
+            <input type="text" name="originalUrl" id="url" placeholder="Enter URL here" required>
+            <button type="submit">Sumit</button>
+        </form>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Serial no.</th>
+                    <th>Original URL</th>
+                    <th>Short URL</th>
+                    <th>Total Clicks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (locals.urls) { %>
+                    <% urls.forEach((url,index) => { %>
+                        <tr>
+                            <td><%= index+1 %></td>
+                            <td><%= url.originalUrl %></td>
+                            <td><a href="http://localhost:8000/api/url/<%= url.shortUrl %>">http://localhost:8000/api/url/<%= url.shortUrl %></a></td>
+                            <td><%= url.visitHistory.length %> visits</td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No URLs found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

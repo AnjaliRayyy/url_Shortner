@@ -25,7 +25,8 @@ async function createShortUrl(req, res) {
             shortUrl: shortUrl,
             visitHistory: [{ timestamp: Date.now(), clicks: 0 }]
         });
-         res.json({msg : "Short URL created successfully", shortUrl: shortUrl});
+        res.render('home',{id : shortUrl}); // Render the home page after creating the short URL
+        //  res.json({msg : "Short URL created successfully", shortUrl: shortUrl});
 
     } catch (error) {
         console.error('Error creating short URL:', error);
@@ -67,15 +68,5 @@ async function getAnalytics(req,res){
     }
 }
 
-//Function to show the home page
-async function showHomePage(req, res) {
-    try {
-        const entries=await Url.find({});
-        res.render('home');
-    }
-    catch (error) {
-        console.error('Error rendering home page:', error);
-        res.status(500).send('Internal Server Error');
-    }
-}
-module.exports = {createShortUrl, redirectToOriginalUrl, getAnalytics, showHomePage};
+
+module.exports = {createShortUrl, redirectToOriginalUrl, getAnalytics};

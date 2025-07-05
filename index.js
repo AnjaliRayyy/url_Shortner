@@ -2,7 +2,8 @@ const express = require('express')
 const app=express();
 const PORT=8000;
 const connectDB = require('./config/db');
-const route = require('./routes/url');
+const router = require('./routes/url');
+const staticRouter = require('./routes/staticRouter');
 const path = require('path');
 
 //Connect to MongoDB
@@ -15,14 +16,15 @@ connectDB('mongodb://127.0.0.1:27017/url_shortener')
 
 //Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 //Seting view engine
 app.set('view engine', 'ejs');
 app.set('views', path.resolve("./views"));
 
 //Routes
-app.use('/api/url', route);
+app.use('/api/url', router);
+app.use('/', staticRouter);
 
 
 //Start the server

@@ -13,6 +13,5 @@ route.route('/:shortUrl').get(redirectToOriginalUrl);
 // Route to show analytics
 route.route('/analytics/:shortUrl').get(getAnalytics);
 
-// Route to show the home page
-route.route('/').get(showHomePage);
+
 module.exports=route;
