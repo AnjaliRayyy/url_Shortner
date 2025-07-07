@@ -23,10 +23,13 @@ async function createShortUrl(req, res) {
         await Url.create({
             originalUrl: originalUrl,
             shortUrl: shortUrl,
-            visitHistory: [{ timestamp: Date.now(), clicks: 0 }]
+            visitHistory: [{ timestamp: Date.now(), clicks: 0 }],
+            createdBy: req.user._id // Store the user ID of the creator
         });
-        res.render('home',{id : shortUrl}); // Render the home page after creating the short URL
+
+        // res.render('home',{id : shortUrl}); // Render the home page after creating the short URL
         //  res.json({msg : "Short URL created successfully", shortUrl: shortUrl});
+        return res.redirect('/'); // Redirect to the home page after creating the short URL
 
     } catch (error) {
         console.error('Error creating short URL:', error);
@@ -43,6 +46,7 @@ async function redirectToOriginalUrl(req, res) {
             { new: true }
         );
         if (!entry) {
+            console.log(req.params.shortUrl);
             return res.status(404).json({ msg: "Short URL not found" });
         }
         return res.redirect(entry.originalUrl);
