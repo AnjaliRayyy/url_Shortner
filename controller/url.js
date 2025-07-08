@@ -16,7 +16,6 @@ async function createShortUrl(req, res) {
             return res.json({msg: "URL already exists", shortUrl: existingUrl.shortUrl });
         }
         
-        
         // If it doesn't exist, create a new short URL
         // Generate a short URL using nanoid   
         const shortUrl= nanoid(8); 
@@ -24,7 +23,7 @@ async function createShortUrl(req, res) {
             originalUrl: originalUrl,
             shortUrl: shortUrl,
             visitHistory: [{ timestamp: Date.now(), clicks: 0 }],
-            createdBy: req.user._id // Store the user ID of the creator
+            createdBy: req.user.id // Store the user ID of the creator
         });
 
         // res.render('home',{id : shortUrl}); // Render the home page after creating the short URL

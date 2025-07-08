@@ -1,11 +1,24 @@
-const sessionIdToUserMap=new Map();
+const jwt=require("jsonwebtoken");
 
-function setUser(id,user){
-    sessionIdToUserMap.set(id, user);
+function authenticateToken(user) {
+const payload = { 
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    role: user.role // Default to "NORMAL" if no role is provided
+ };
+return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
-function getUser(id){
-    return sessionIdToUserMap.get(id);
-}
+function verifyToken(token) {
+    try {
+        if(!token) {
+            return null; // No token provided
+        }
+        return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+        return null; // Token is invalid or expired
+    }
+    }
 
-module.exports = {setUser, getUser}
+module.exports = {authenticateToken, verifyToken};

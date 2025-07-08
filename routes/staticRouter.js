@@ -1,10 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const Url= require('../models/url'); // Import the Url model
+const {restrictTo} = require('../middlewares/auth'); // Import authentication middleware
 
-router.get('/',async  (req, res) => {
+router.get('/admin/urls', restrictTo(["ADMIN"]), async (req, res) => {
+    if(!req.user) return res.redirect("/login");
+    try {
+        const allUrls = await Url.find({}); // Fetch all URLs from the database
+        res.render('home', { urls: allUrls }); // Render the admin page with the URLs
+    } catch (error) {
+        console.error('Error fetching URLs:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.get('/',restrictTo(["NORMAL"]),async  (req, res) => {
     if(!req.user)   return res.redirect("/login");
-    const allUrls = await Url.find({createdBy : req.user._id}); // Fetch all URLs from the database
+    const allUrls = await Url.find({createdBy : req.user.id}); // Fetch all URLs from the database
     res.render('home', { urls: allUrls }); // Render the home page with the URLs
 });
 
